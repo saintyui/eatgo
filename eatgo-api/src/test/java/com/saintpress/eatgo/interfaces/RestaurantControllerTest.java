@@ -1,9 +1,15 @@
 package com.saintpress.eatgo.interfaces;
 
+import com.saintpress.eatgo.application.RestaurantService;
+import com.saintpress.eatgo.domain.MenuItemRepository;
+import com.saintpress.eatgo.domain.MenuItemRepositoryImpl;
+import com.saintpress.eatgo.domain.RestaurantRepository;
+import com.saintpress.eatgo.domain.RestaurantRepositoryImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,6 +24,15 @@ public class RestaurantControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @SpyBean(RestaurantRepositoryImpl.class)
+    private RestaurantRepository restaurantRepository;
+
+    @SpyBean(MenuItemRepositoryImpl.class)
+    private MenuItemRepository menuItemRepository;
+
+    @SpyBean(RestaurantService.class)
+    private RestaurantService restaurantService;
 
     @Test
     public void list() throws Exception {
@@ -40,6 +55,9 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"bob zip\"")
+                ))
+                .andExpect(content().string(
+                        containsString("kimchi")
                 ));
 
         mvc.perform(get("/restaurants/2020"))
